@@ -376,7 +376,11 @@ Na página inicial do ArgoCD, em **Applications**, clique em **"New App"** e pre
 
 ![Informações Aplicação](imgs/infos.png)
 
+* Clique em create
 
+Após alguns segundos, o ArgoCD completará a sincronização e os status devem aparecer como **Healthy** e **Synced**, indicando que tudo está funcionando como o esperado:
+
+![Aplicação Rodando no ArgoCD](imgs/app.png)
 
 
 
