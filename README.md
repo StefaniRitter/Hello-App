@@ -291,7 +291,7 @@ Esse manifesto do Kubernetes define um Deployment, que serve para gerenciar rép
 
 ### Etapa 6.2 - Criação do service.yaml
 
-No mesmo repositório `Hello-Manifests`, também foi criado o arquivo `service.yaml', que tem o seguinte código:
+No mesmo repositório `Hello-Manifests`, também foi criado o arquivo `service.yaml`, que tem o seguinte código:
 
 ```
 apiVersion: v1 
@@ -308,7 +308,48 @@ spec:
   type: ClusterIP
 ```
 
+Esse manifesto define um Service, que funciona como um ponto de acesso estável para os pods. Ele permite que outros pods ou usuários dentro do cluster acessem os pods sem precisar saber os nomes ou IPs individuais deles.
 
+
+Com os arquivos criados, na próxima vez que for realizado um Push, o GitHub Actions vai gerar automaticamente um Pull Request no repositório de manifests, atualizando a tag da imagem com o SHA do commit, e o ArgoCD poderá sincronizar automaticamente os deploys:
+
+![Pull Request](imgs/pullRequests.png)
+
+## Etapa 7 - Criação do App no ArgoCD 
+
+Nessa etapa será realizada a criação da aplicação no ArgoCD, que vai monitorar o repositório `Hello-Manifests` e aplicar automaticamente as alterações no cluster Kubernetes.
+
+Importante: para executar as próximas etapas, foi usado o Windows PowerShell.
+
+### Etapa 7.1 - Instalação do ArgoCD
+
+Com o Rancher Desktop aberto e o status do cluster mostrando "Kubernetes is running", execute os seguintes comandos no terminal (se ainda não tiver o ArgoCD instalado):
+```
+kubectl create namespace argocd
+```
+
+```
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/refs/heads/master/manifests/install.yaml
+
+```
+
+### Etapa 7.2 - Acessar o ArgoCC localmente
+
+Para acessar a interface web (UI) e a CLI do ArgoCD a partir do navegador/terminal, é necessário abrir uma conexão entre o localhost e o Service do ArgoCD.
+
+Para encaminhar o tráfego da porta 443 do serviço (svc) chamado argocd-server no Namespace argocd para a porta 8080 no localhost, execute o seguinte comando:
+```
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+```
+
+Ao acessar o ArgoCD cia navegador, verá que é necessário informar usuário e senha para o login. O usuário padrão do ArgoCD é o admin, e a senha pode ser gerada com o seguinte comando em outro terminal:
+```
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | %{[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($_))}
+```
+
+Depois é só copiar a senha e acessar o ArgoCD:
+
+![Página inicial ArgoCD](imgs/argoCD.png)
 
 
 
