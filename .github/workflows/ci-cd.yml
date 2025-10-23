@@ -1,0 +1,62 @@
+name: CI/CD
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build e Push da Imagem
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/hello-app:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/hello-app:latest
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Clone do Repo de Manifests
+        uses: actions/checkout@v4
+        with:
+          repository: StefaniRitter/Hello-Manifests
+          token: ${{ secrets.PAT }}
+          path: Hello-Manifests
+
+      - name: Atualizar tag da imagem no Repo de Manifests
+        run: |
+          cd Hello-Manifests
+          sed -i "s|image: .*/hello-app:.*|image: ${{ secrets.DOCKER_USERNAME }}/hello-app:${{ github.sha }}|g" deployment.yaml
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add deployment.yaml
+          git commit -m "Atualizando a imagem hello-app para ${{ github.sha }}" || echo "Nenhuma alteração necessária."
+
+      - name: Pull Request no Repo de Manifests
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.PAT }}
+          commit-message: "Atualização da imagem hello-app para ${{ github.sha }}"
+          title: "Atualização da imagem hello-app para ${{ github.sha }}"
+          body: "Atualização automática do manifesto Kubernetes com a nova imagem Docker da aplicação."
+          branch: att-hello-app-${{ github.sha }}
+          base: main
+          delete-branch: true
+          path: Hello-Manifests
+
+       
+
