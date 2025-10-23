@@ -333,7 +333,7 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/re
 
 ```
 
-### Etapa 7.2 - Acessar o ArgoCC localmente
+### Etapa 7.2 - Acessar o ArgoCD localmente
 
 Para acessar a interface web (UI) e a CLI do ArgoCD a partir do navegador/terminal, é necessário abrir uma conexão entre o localhost e o Service do ArgoCD.
 
@@ -351,10 +351,30 @@ Depois é só copiar a senha e acessar o ArgoCD:
 
 ![Página inicial ArgoCD](imgs/argoCD.png)
 
+### Etapa 7.3 - Criação do App
 
+Na página inicial do ArgoCD, em **Applications**, clique em **"New App"** e preencha as informações:
 
+* **Application Name**: hello-app
+* **Project name**: default
+* **Sync Policy**: Automatic
+  
+* Habilite: 
+   * ✅ Sync Policy → Automatic
+   * ✅ Prune Resources
+   * ✅ Self Heal
+   * ✅ Set Deletion Finalizer
+   * ✅ Auto-Create Namespace
 
+![Sync Policy](imgs/syncPolicy.png)
 
+* **Repository URL**: [(https://github.com/StefaniRitter/Hello-Manifests)](https://github.com/StefaniRitter/Hello-Manifests) (substitua por suas informações)
+* **Revision**: main
+* **Path**: .
+* **Cluster Name**: in-cluster
+* **Namespace**: hello-app
+
+![Informações Aplicação](imgs/infos.png)
 
 
 
