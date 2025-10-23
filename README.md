@@ -370,21 +370,23 @@ Na página inicial do ArgoCD, em **Applications**, clique em **"New App"** e pre
 
 * **Repository URL**: [(https://github.com/StefaniRitter/Hello-Manifests)](https://github.com/StefaniRitter/Hello-Manifests) (substitua por suas informações)
 * **Revision**: main
-* **Path**: .
+* **Path**: . (pois os arquivos estão na raiz)
 * **Cluster Name**: in-cluster
 * **Namespace**: hello-app
 
 ![Informações Aplicação](imgs/infos.png)
 
-* Clique em create
+**Clique em create**
 
 Após alguns segundos, o ArgoCD completará a sincronização e os status devem aparecer como **Healthy** e **Synced**, indicando que tudo está funcionando como o esperado:
 
 ![Aplicação Rodando no ArgoCD](imgs/app.png)
 
 
+![Aplicação Rodando no ArgoCD](imgs/appSynced.png)
 
 
+Como pode-se notar nas imagens acima, a aplicação foi criada e sincronizada no ArgoCD, e a partir de agora qualquer atualização no repositório de manifestos será aplicada automaticamente no cluster kubernetes.
 
 
 
