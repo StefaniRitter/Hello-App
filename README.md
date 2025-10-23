@@ -113,16 +113,153 @@ CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 * `EXPOSE 8000`: indica a porta que o FastAPI vai usar.
 * `CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]`: executa o servidor Uvicorn quando o container inicia.
 
-## Etapa 4 - Configurar o GitHub Actions 
+## Etapa 4 - Criação dos Segredos no GitHub
+
+Para que a pipeline funcione corretamente, é necessário criar algumas variáveis (secrets) no GitHub. 
+Essas variáveis são criadas dentro do repositório Hello-App, em **Settings → Secrets and variables → Actions → New repository secret**
+
+1. **DOCKER_USERNAME:**
+   * **Name***: DOCKER_USERNAME
+   * **Secret***: <Seu_Nome_de_Usuário_DockerHub>
+* Clique em `Add secret`
+
+2. **DOCKER_PASSWORD:**
+   * **Name***: DOCKER_PASSWORD
+   * **Secret***: <Seu_Token_de_Acesso_do_DockerHub>
+   
+⚠️ O Token de Acesso não é a sua senha!
+
+Para criar um token, [Acesse os tokens de acesso pessoal do Docker](https://app.docker.com/settings/personal-access-tokens) e clique em “New Access Token”.
+
+Dê um nome (ex: github-actions), copie o token gerado e cole no campo Secret* (valor) de DOCKER_PASSWORD.
+
+3. **PAT - Personal Access Token (Classic) com permissão de escrita no repositório dos manifests:**
+   * **Name***: PAT
+   * **Secret***: <Seu_PAT>
+
+Para gerar o Personal Access Token, acesse [https://github.com/settings/tokens](https://github.com/settings/tokens) e clique em **“Generate new token (classic)”**.
+
+Preencha as informações:
+   * **Note**: github-actions
+   * **Expiration**: No expiration
+   * **Scopes**: Marque a opção "Repo"
+
+Clique em "Generate Token".
+Copie o token gerado e cole no campo Secret* (valor) de PAT.
+
+Resultado:
+
+![Secrets](imgs/secrets.png)
+
+## Etapa 5 - Configuração do GitHub Actions 
 
 Nesta etapa será implementado o pipeline de Integração e Entrega Contínua (CI/CD) utilizando o GitHub Actions para buildar e fazer a publicação da imagem no Docker Hub (container registry), realizar um Pull Request automaticamente no repositório de manifestos e alterar a imagem sempre que necessário.
 
-### Etapa 4.1 - Criação do Arquivo de Workflow
+### Etapa 5.1 - Criação do Arquivo de Workflow
 
 Em `.github/workflows/` foi criado um arquivo com nome `ci-cd.yml` com o seguinte conteúdo:
 ```
+name: CI/CD
 
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build e Push da Imagem
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/hello-app:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/hello-app:latest
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Clone do Repo de Manifests
+        uses: actions/checkout@v4
+        with:
+          repository: StefaniRitter/Hello-Manifests
+          token: ${{ secrets.PAT }}
+          path: Hello-Manifests
+
+      - name: Atualizar tag da imagem no Repo de Manifests
+        run: |
+          cd Hello-Manifests
+          sed -i "s|image: .*/hello-app:.*|image: ${{ secrets.DOCKER_USERNAME }}/hello-app:${{ github.sha }}|g" deployment.yaml
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add deployment.yaml
+          git commit -m "Atualizando a imagem hello-app para ${{ github.sha }}" || echo "Nenhuma alteração necessária."
+
+      - name: Pull Request no Repo de Manifests
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.PAT }}
+          commit-message: "Atualização da imagem hello-app para ${{ github.sha }}"
+          title: "Atualização da imagem hello-app para ${{ github.sha }}"
+          body: "Atualização automática do manifesto Kubernetes com a nova imagem Docker da aplicação."
+          branch: att-hello-app-${{ github.sha }}
+          base: main
+          delete-branch: true
+          path: Hello-Manifests
 ```
+
+O pipeline é executado automaticamente quando acontece um push, e é dividido em duas fases (jobs):
+
+1. Build:
+   * Faz login no Docker Hub com os Secrets definidos.
+   * Constrói a imagem Docker da aplicação FastAPI.
+   * Envia (push) a imagem para o Docker Hub com as tags.
+
+2. Deploy
+   * É executado somente depois do build (needs: build).
+   * Clona o repositório Hello-Manifests.
+   * Atualiza a tag da imagem no arquivo deployment.yaml.
+   * Cria um Pull Request automático para atualizar os manifests.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
