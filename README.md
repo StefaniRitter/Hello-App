@@ -233,9 +233,23 @@ O pipeline é executado automaticamente quando acontece um push, e é dividido e
    * Atualiza a tag da imagem no arquivo deployment.yaml.
    * Cria um Pull Request automático para atualizar os manifests.
 
+Após essas etapas, podemos ver na interface do Docker Hub que a imagem `hello-app` foi construída com sucesso:
 
+![Secrets](imgs/dockerHub.png)
 
+No repositório Hello-Manifests ainda não acontece o Pull-Request, pois ainda não foram criados os arquivos de manifesto `deployment.yaml` e `service.yaml`. Isso será feito nas próximas etapas.
 
+## Etapa 6 - Criação dos Manifestos Kubernetes
+
+Como dito anteriormente, nessa etapa serão cridos os arquivos de manifesto Kubernetes, que serão utilizados pelo ArgoCD para realizar o deploy automático da aplicação FastAPI.
+
+### Etapa 6.1 - Criação do deployment.yaml
+
+No [Repositório de Manifestos](https://github.com/StefaniRitter/Hello-Manifests), foi criado um arquivo chamado `deployment.yaml`, com o conteúdo abaixo:
+
+```
+
+```
 
 
 
