@@ -248,18 +248,65 @@ Como dito anteriormente, nessa etapa serão cridos os arquivos de manifesto Kube
 No [Repositório de Manifestos](https://github.com/StefaniRitter/Hello-Manifests), foi criado um arquivo chamado `deployment.yaml`, com o conteúdo abaixo:
 
 ```
-
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloApp-deployment
+  labels:
+    app: hello-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-app
+  template:
+    metadata:
+      labels:
+        app: hello-app
+    spec:
+      containers:
+        - name: hello-app
+          image: stefaniritter/hello-app:latest
+          ports:
+            - containerPort: 8080
 ```
 
+Esse manifesto do Kubernetes define um Deployment, que serve para gerenciar réplicas de um pod:
+
+* `apiVersion`: Define a versão da API do Kubernetes que está sendo usada para criar o Deployment.
+  
+* `kind`: Indica que está sendo criado um Deployment, que é responsável por:
+   * Criar pods com base na configuração.
+   * Garantir que o número desejado de réplicas esteja sempre rodando.
+   * Fazer atualizações rolling update sem downtime.
+     
+* `metadata`: Informações sobre o deployment (nome, labels).
+  
+* `spec`: Define o comportamento do deployment, como número de réplicas dos pods e quais pods serão monitorados.
+  
+* `template`: É o modelo que define como os pods serão criados:
+  * **metadata.labels**: rótulo do pod
+  * **spec.containers**: lista de containers do pod, que nesse caso é o container `hello-app`, que usa a imagem `stefaniritter/hello-app:latest` e fica exposto na porta 8080.
 
 
+### Etapa 6.2 - Criação do service.yaml
 
+No mesmo repositório `Hello-Manifests`, também foi criado o arquivo `service.yaml', que tem o seguinte código:
 
-
-
-
-
-
+```
+apiVersion: v1 
+kind: Service
+metadata:
+  name: helloApp-Service
+spec:
+  selector:
+    app: hello-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
+```
 
 
 
