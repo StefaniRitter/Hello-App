@@ -96,6 +96,51 @@ async def root():
 
 ## Etapa 3 - Criação do Dockerfile
 
+Para empacotar e executar a aplicação em um container, foi criado um Dockerfile com as seguintes instruções:
+```
+FROM python:3.11-slim
+WORKDIR /app
+RUN pip install fastapi uvicorn
+COPY app/ ./app
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+* `FROM python:3.11-slim`: usa uma imagem Python leve e recente.
+* `WORKDIR /app`: define onde o código vai rodar dentro do container.
+* `RUN pip install fastapi uvicorn`: instala o FastAPI e o servidor Uvicorn.
+* `COPY app/ ./app`: copia a pasta app (onde está main.py) para o container.
+* `EXPOSE 8000`: indica a porta que o FastAPI vai usar.
+* `CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]`: executa o servidor Uvicorn quando o container inicia.
+
+## Etapa 4 - Configurar o GitHub Actions 
+
+Nesta etapa será implementado o pipeline de Integração e Entrega Contínua (CI/CD) utilizando o GitHub Actions para buildar e fazer a publicação da imagem no Docker Hub (container registry), realizar um Pull Request automaticamente no repositório de manifestos e alterar a imagem sempre que necessário.
+
+### Etapa 4.1 - Criação do Arquivo de Workflow
+
+Em `.github/workflows/` foi criado um arquivo com nome `ci-cd.yml` com o seguinte conteúdo:
+```
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
