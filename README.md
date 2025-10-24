@@ -457,10 +457,15 @@ Confirme o Merge e pronto:
 
 ![Merge Pull Request](imgs/mergePull.png)
 
+### Etapa 9.4 - Verificação
 
+Após o merge no Pull Request, o ArgoCD deve realizar a sincronização automática do novo deploy:
 
+![ArgoCD com Deploy Sincronizado](imgs/novoDeploy.png)
 
+Para ver a nova aplicação, basta refazer o port-forward (Etapa 8) e acessar `http://localhost:8000/` novamente. A mensagem agora deve estar atualizada:
 
+![Aplicação com Mensagem Atualizada](imgs/appAtualizada.png)
 
 
 
