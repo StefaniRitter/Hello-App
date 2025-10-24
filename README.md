@@ -398,6 +398,10 @@ No terminal, execute o seguinte comando:
 kubectl get pods -n hello-app
 ```
 
+A saída deve ser algo assim:
+
+![Saída de kubectl get pods](imgs/kubeGetPods.png)
+
 Copie o nome de um dos pods e rode o comando abaixo, substituindo <NOME_DO_POD> pelo nome copiado:
 ```
 kubectl port-forward <NOME_DO_POD> -n hello-app 8000:8000
@@ -461,6 +465,10 @@ Confirme o Merge e pronto:
 Após o merge no Pull Request, o ArgoCD deve realizar a sincronização automática do novo deploy:
 
 ![ArgoCD com Deploy Sincronizado](imgs/novoDeploy.png)
+
+No repositório principal, em **Actions**, é possível ver que o build e o deploy foram realizados com sucesso, atualizando a tag da imagem:
+
+![Actions com Build e Deploy](imgs/buildEdeploy.png)
 
 Para ver a nova aplicação, basta refazer o port-forward (Etapa 8) e acessar `http://localhost:8000/` novamente. A mensagem agora deve estar atualizada:
 
