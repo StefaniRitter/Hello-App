@@ -1,15 +1,15 @@
-# Hello-App: Pipeline CI/CD e GitOps Completa
+# 🚀 Hello-App: Pipeline CI/CD e GitOps Completa
 
-## Visão Geral
+## ✨ Visão Geral
 
 Este projeto foi desenvolvido como parte do programa de bolsas Cloud & DevSecOps da Compass UOL.
 O repositório demonstra, na prática, uma pipeline completa de Integração Contínua (CI), Entrega Contínua (CD) e GitOps, utilizando uma aplicação FastAPI como exemplo de workload.
 
-## Objetivo Principal
+## 🎯 Objetivo Principal
 
-Automatizar o ciclo completo de desenvolvimento, build, deploy e execução de uma aplicação FastAPI simples, usando GitHub Actions para CI/CD, Docker Hub como registry, e ArgoCD para entrega contínua em Kubernetes local com Rancher Desktop. 
+Automatizar o ciclo completo de desenvolvimento, construção (build), implantação (deploy) e execução de uma aplicação FastAPI simples, usando GitHub Actions para CI/CD, Docker Hub como registry, e ArgoCD para entrega contínua em Kubernetes local com Rancher Desktop. 
 
-## Tecnologias e Ferramentas Utilizadas
+## 🛠️ Tecnologias e Ferramentas Utilizadas
 
 * Linguagem/Framework: Python 3.12 + FastAPI.
 
@@ -24,7 +24,7 @@ Automatizar o ciclo completo de desenvolvimento, build, deploy e execução de u
 * Registro de Imagens: Docker Hub.
 
 
-## Pré-requisitos 
+## ✅ Pré-requisitos 
 
 * Conta no GitHub: (Repositório público com Actions habilitadas).
 
@@ -38,7 +38,7 @@ Automatizar o ciclo completo de desenvolvimento, build, deploy e execução de u
 
 * Git e Python 3 instalados localmente
 
-## Fluxo de Trabalho
+## 🔄 Fluxo de Trabalho
 
 1.  **Commit do Código:** Um git push no repositório `hello-app` aciona o workflow.
 
@@ -47,7 +47,7 @@ Automatizar o ciclo completo de desenvolvimento, build, deploy e execução de u
     * Faz o *push* da imagem versionada para o Docker Hub.
 
 3.  **CD/GitOps (GitHub Actions):** Após o *push* bem-sucedido:
-    * O workflow **atualiza um arquivo de manifesto** no repositório de configuração `hello-manifests`.
+    * O workflow atualiza a tag de imagem em um arquivo de manifesto no repositório de configuração.
    
 4.  **Deploy (ArgoCD):**
     * O **ArgoCD** monitora o repositório de manifestos.
@@ -56,7 +56,7 @@ Automatizar o ciclo completo de desenvolvimento, build, deploy e execução de u
 5.  **Execução:** A nova versão da aplicação FastAPI entra em execução no Kubernetes.
    
 
-## Etapa 1 - Criação dos Repositórios
+## ⚙️ Etapa 1 - Criação dos Repositórios
 
 Antes de configurar a pipeline de CI/CD e o GitOps, é necessário preparar dois repositórios: um para o código da aplicação (Hello-App) e outro para os manifestos Kubernetes (Hello-Manifests).
 
@@ -82,7 +82,7 @@ O segundo repositório, `hello-manifests`, será utilizado para armazenar os arq
 👉 [Ir para Hello-Manifests](https://github.com/StefaniRitter/Hello-Manifests)
 
 
-## Etapa 2 - Criação da Aplicação FastAPI
+## 🐍 Etapa 2 - Criação da Aplicação FastAPI
 
 No repositório principal, em `hello-app/app/`, foi criado o arquivo main.py com o conteúdo abaixo:
 ```
@@ -94,7 +94,7 @@ async def root():
     return {"message": "Hello World"} 
 ```
 
-## Etapa 3 - Criação do Dockerfile
+## 🐳 Etapa 3 - Criação do Dockerfile
 
 Para empacotar e executar a aplicação em um container, foi criado um Dockerfile com as seguintes instruções:
 ```
@@ -106,14 +106,14 @@ EXPOSE 8000
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
-* `FROM python:3.11-slim`: usa uma imagem Python leve e recente.
-* `WORKDIR /app`: define onde o código vai rodar dentro do container.
-* `RUN pip install fastapi uvicorn`: instala o FastAPI e o servidor Uvicorn.
-* `COPY app/ ./app`: copia a pasta app (onde está main.py) para o container.
-* `EXPOSE 8000`: indica a porta que o FastAPI vai usar.
-* `CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]`: executa o servidor Uvicorn quando o container inicia.
+* `FROM python:3.11-slim`: Usa uma imagem Python leve e recente.
+* `WORKDIR /app`: Define onde o código vai rodar dentro do container.
+* `RUN pip install fastapi uvicorn`: Instala o FastAPI e o servidor Uvicorn.
+* `COPY app/ ./app`: Copia a pasta app (onde está main.py) para o container.
+* `EXPOSE 8000`: Indica a porta que o FastAPI vai usar.
+* `CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]`: Executa o servidor Uvicorn quando o container inicia.
 
-## Etapa 4 - Criação dos Segredos no GitHub
+## 🔑 Etapa 4 - Criação dos Segredos no GitHub
 
 Para que a pipeline funcione corretamente, é necessário criar algumas variáveis (secrets) no GitHub. 
 Essas variáveis são criadas dentro do repositório Hello-App, em **Settings → Secrets and variables → Actions → New repository secret**
@@ -151,7 +151,7 @@ Resultado:
 
 ![Secrets](imgs/secrets.png)
 
-## Etapa 5 - Configuração do GitHub Actions 
+## 🚀 Etapa 5 - Configuração do GitHub Actions 
 
 Nesta etapa será implementado o pipeline de Integração e Entrega Contínua (CI/CD) utilizando o GitHub Actions para buildar e fazer a publicação da imagem no Docker Hub (container registry), realizar um Pull Request automaticamente no repositório de manifestos e alterar a imagem sempre que necessário.
 
@@ -239,9 +239,9 @@ Após essas etapas, podemos ver na interface do Docker Hub que a imagem `hello-a
 
 No repositório Hello-Manifests ainda não acontece o Pull-Request, pois ainda não foram criados os arquivos de manifesto `deployment.yaml` e `service.yaml`. Isso será feito nas próximas etapas.
 
-## Etapa 6 - Criação dos Manifestos Kubernetes
+## 📜 Etapa 6 - Criação dos Manifestos Kubernetes
 
-Como dito anteriormente, nessa etapa serão cridos os arquivos de manifesto Kubernetes, que serão utilizados pelo ArgoCD para realizar o deploy automático da aplicação FastAPI.
+Como dito anteriormente, nessa etapa serão criados os arquivos de manifesto Kubernetes, que serão utilizados pelo ArgoCD para realizar o deploy automático da aplicação FastAPI.
 
 ### Etapa 6.1 - Criação do deployment.yaml
 
@@ -315,7 +315,7 @@ Com os arquivos criados, na próxima vez que for realizado um Push, o GitHub Act
 
 ![Pull Request](imgs/pullRequests.png)
 
-## Etapa 7 - Criação do App no ArgoCD 
+## 🚢 Etapa 7 - Criação do App no ArgoCD 
 
 Nessa etapa será realizada a criação da aplicação no ArgoCD, que vai monitorar o repositório `Hello-Manifests` e aplicar automaticamente as alterações no cluster Kubernetes.
 
@@ -389,7 +389,7 @@ Após alguns segundos, o ArgoCD completará a sincronização e os status devem 
 
 Como pode-se notar nas imagens acima, a aplicação foi criada e sincronizada no ArgoCD, e a partir de agora qualquer atualização no repositório de manifestos será aplicada automaticamente no cluster kubernetes.
 
-## Etapa 8 - Acessando Aplicação
+## 🖥️ Etapa 8 - Acessando Aplicação
 
 Nesta etapa, será acessada a aplicação via port-forward.
 
@@ -412,12 +412,11 @@ E depois basta acessar o endereço `http://localhost:8000/` pelo seu navegador p
 
 ![Aplicação Hello World](imgs/helloWorld.png)
 
-Atenção: o endereço que deve ser usado é **http://** e não https://.
-
+⚠️ Atenção: o endereço que deve ser usado é **http://** e não https://.
 
 ✅ Aplicação funcionando!
 
-## Etapa 9 - Modificação da Mensagem
+## ✏️ Etapa 9 - Modificação da Mensagem
 
 Chegamos na última etapa, onde será alterado o repositório da aplicação, modificando a mensagem dentro do código python de "Hello World" para outra mensagem e verificando se após o processo de CI/CD a imagem foi atualizada no 
 ambiente Kubernetes. 
@@ -431,7 +430,7 @@ from fastapi import FastAPI
 app = FastAPI() 
 @app.get("/") 
 async def root(): 
-    return {"message": "Imagem atualizada! O projeto foi concluído com sucesso!🎯🏅🎉"} 
+    return {"message": "Imagem atualizada! O projeto foi concluído com sucesso!🎯🎉"} 
 ```
 
 ### Etapa 9.2 - Realizar o commit
@@ -467,7 +466,8 @@ Para ver a nova aplicação, basta refazer o port-forward (Etapa 8) e acessar `h
 
 ![Aplicação com Mensagem Atualizada](imgs/appAtualizada.png)
 
-
+Com isso podemos concluir que o projeto foi realizado com sucesso e cumpre o objetivo de automatizar ciclo completo de desenvolvimento, build, deploy e 
+execução de uma aplicação FastAPI, usando GitHub Actions para CI/CD, Docker Hub como registry, e ArgoCD para entrega contínua em Kubernetes local com Rancher Desktop. 🎉
 
 
 
