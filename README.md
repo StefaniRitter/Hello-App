@@ -268,7 +268,7 @@ spec:
         - name: hello-app
           image: stefaniritter/hello-app:latest
           ports:
-            - containerPort: 8080
+            - containerPort: 8000
 ```
 
 Esse manifesto do Kubernetes define um Deployment, que serve para gerenciar réplicas de um pod:
@@ -304,7 +304,7 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8080
+      targetPort: 8000
   type: ClusterIP
 ```
 
