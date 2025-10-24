@@ -451,6 +451,10 @@ Com isso, o GitHub Actions será disparado automaticamente, realizando o build d
 No repositório [Hello-Manifests](https://github.com/StefaniRitter/Hello-Manifests), em Pull Requests, clique no último Pull Request gerado.
 CLique em Merge para aplicar as mudanças na branch principal:
 
+![Merge Pull Request](imgs/mergeClick.png)
+
+Confirme o Merge e pronto:
+
 ![Merge Pull Request](imgs/mergePull.png)
 
 
