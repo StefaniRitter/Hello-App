@@ -235,7 +235,7 @@ O pipeline é executado automaticamente quando acontece um push, e é dividido e
 
 Após essas etapas, podemos ver na interface do Docker Hub que a imagem `hello-app` foi construída com sucesso:
 
-![Secrets](imgs/dockerHub.png)
+![Docker Hub](imgs/dockerHub.png)
 
 No repositório Hello-Manifests ainda não acontece o Pull-Request, pois ainda não foram criados os arquivos de manifesto `deployment.yaml` e `service.yaml`. Isso será feito nas próximas etapas.
 
@@ -341,8 +341,9 @@ Para encaminhar o tráfego da porta 443 do serviço (svc) chamado argocd-server 
 ```
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 ```
+No navegador, acesse o ArgoCD através do endereço `https://localhost:8080`.
 
-Ao acessar o ArgoCD cia navegador, verá que é necessário informar usuário e senha para o login. O usuário padrão do ArgoCD é o admin, e a senha pode ser gerada com o seguinte comando em outro terminal:
+Ao acessar o ArgoCD, verá que é necessário informar usuário e senha para o login. O usuário padrão do ArgoCD é o `admin`, e a senha pode ser gerada com o seguinte comando em outro terminal:
 ```
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | %{[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($_))}
 ```
@@ -388,7 +389,11 @@ Após alguns segundos, o ArgoCD completará a sincronização e os status devem 
 
 Como pode-se notar nas imagens acima, a aplicação foi criada e sincronizada no ArgoCD, e a partir de agora qualquer atualização no repositório de manifestos será aplicada automaticamente no cluster kubernetes.
 
+## Etapa 8 - Acesso e Teste da Aplicação
 
+Nesta etapa, será acessada a aplicação via port-forward para testar se tudo está funcionando.
+
+## Etapa 8.1 - Acessar via Port-forward
 
 
 
