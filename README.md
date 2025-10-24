@@ -468,7 +468,9 @@ Após o merge no Pull Request, o ArgoCD deve realizar a sincronização automát
 
 No repositório principal, em **Actions**, é possível ver que o build e o deploy foram realizados com sucesso, atualizando a tag da imagem:
 
-![Actions com Build e Deploy](imgs/buildEdeploy.png)
+![Actions com Build](imgs/buildDockerHub.png)
+
+![Actions com Deploy](imgs/buildEdeploy.png)
 
 Para ver a nova aplicação, basta refazer o port-forward (Etapa 8) e acessar `http://localhost:8000/` novamente. A mensagem agora deve estar atualizada:
 
