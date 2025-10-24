@@ -286,7 +286,7 @@ Esse manifesto do Kubernetes define um Deployment, que serve para gerenciar rép
   
 * `template`: É o modelo que define como os pods serão criados:
   * **metadata.labels**: rótulo do pod
-  * **spec.containers**: lista de containers do pod, que nesse caso é o container `hello-app`, que usa a imagem `stefaniritter/hello-app:latest` e fica exposto na porta 8080.
+  * **spec.containers**: lista de containers do pod, que nesse caso é o container `hello-app`, que usa a imagem `stefaniritter/hello-app:latest` e fica exposto na porta 8000.
 
 
 ### Etapa 6.2 - Criação do service.yaml
@@ -389,19 +389,47 @@ Após alguns segundos, o ArgoCD completará a sincronização e os status devem 
 
 Como pode-se notar nas imagens acima, a aplicação foi criada e sincronizada no ArgoCD, e a partir de agora qualquer atualização no repositório de manifestos será aplicada automaticamente no cluster kubernetes.
 
-## Etapa 8 - Acesso e Teste da Aplicação
+## Etapa 8 - Acessando Aplicação
 
-Nesta etapa, será acessada a aplicação via port-forward para testar se tudo está funcionando.
+Nesta etapa, será acessada a aplicação via port-forward.
 
-## Etapa 8.1 
+No terminal, execute o seguinte comando:
+```
+kubectl port-forward helloapp-deployment-85564bd9bb-8d2z2 -n hello-app 8000:8000
+```
+
+E depois basta acessar o endereço `http://localhost:8000/` pelo seu navegador para ver a aplicação:
+
+![Aplicação Hello World](imgs/helloWorld.png)
 
 
+✅ Aplicação funcionando!
 
+## Etapa 9 - Modificação da Mensagem
 
+Chegamos na última etapa, onde será alterado o repositório da aplicação, modificando a mensagem dentro do código python de "Hello World" para outra mensagem e verificando se após o processo de CI/CD a imagem foi atualizada no 
+ambiente Kubernetes. 
 
+### Etapa 9.1 - Alterar o código main.py
 
+Em main.py, modifique a mensagem de "Hello World" para outra mensagem qualquer:
+```
+from fastapi import FastAPI 
 
+app = FastAPI() 
+@app.get("/") 
+async def root(): 
+    return {"message": "Imagem atualizada! O projeto foi concluído com sucesso!🎯🏅🎉"} 
+```
 
+### Etapa 9.2 - Realizar o commit
+
+No git bash, rode os seguintes comandos para fazer o commit e push das alterações para o repositório:
+```
+git add .
+git commit -m "Atualizando mensagem do arquivo main.py!"
+git push -u origin main
+```
 
 
 
