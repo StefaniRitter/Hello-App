@@ -3,4 +3,4 @@ from fastapi import FastAPI
 app = FastAPI() 
 @app.get("/") 
 async def root(): 
-    return {"message": "Hello World"} 
+    return {"message": "Imagem atualizada! O projeto foi concluído com sucesso!🎯🏅🎉"} 
