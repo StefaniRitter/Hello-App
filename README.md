@@ -395,12 +395,24 @@ Nesta etapa, será acessada a aplicação via port-forward.
 
 No terminal, execute o seguinte comando:
 ```
-kubectl port-forward helloapp-deployment-85564bd9bb-8d2z2 -n hello-app 8000:8000
+kubectl get pods -n hello-app
+```
+
+Copie o nome de um dos pods e rode o comando abaixo, substituindo <NOME_DO_POD> pelo nome copiado:
+```
+kubectl port-forward <NOME_DO_POD> -n hello-app 8000:8000
+```
+
+Exemplo:
+```
+kubectl port-forward helloapp-deployment-7967849dc-dkj54 -n hello-app 8000:8000
 ```
 
 E depois basta acessar o endereço `http://localhost:8000/` pelo seu navegador para ver a aplicação:
 
 ![Aplicação Hello World](imgs/helloWorld.png)
+
+Atenção: o endereço que deve ser usado é **http://** e não https://.
 
 
 ✅ Aplicação funcionando!
