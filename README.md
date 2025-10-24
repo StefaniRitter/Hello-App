@@ -430,6 +430,17 @@ git add .
 git commit -m "Atualizando mensagem do arquivo main.py!"
 git push -u origin main
 ```
+Com isso, o GitHub Actions será disparado automaticamente, realizando o build da nova imagem, o push no Docker Hub, a alteração da tag no deployment.yaml do repositório de manifests e a criação de um Pull Request.
+
+![Atualização da imagem no Docker Hub](imgs/imgAtualizadaDH.png)
+
+### Etapa 9.3 - Mesclar Pull Request
+
+No repositório [Hello-Manifests](https://github.com/StefaniRitter/Hello-Manifests), em Pull Requests, clique no último Pull Request gerado.
+CLique em Merge para aplicar as mudanças na branch principal:
+
+![Merge Pull Request](imgs/mergePull.png)
+
 
 
 
