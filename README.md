@@ -393,7 +393,7 @@ Como pode-se notar nas imagens acima, a aplicação foi criada e sincronizada no
 
 Nesta etapa, será acessada a aplicação via port-forward para testar se tudo está funcionando.
 
-## Etapa 8.1 - Acessar via Port-forward
+## Etapa 8.1 
 
 
 
